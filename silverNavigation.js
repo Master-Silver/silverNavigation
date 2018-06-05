@@ -1,19 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
   'use strict';
   var options = {
-    navigationClass : "silverNavigation",
-    buttonClass     : "silverSubpageAcces",
-    buttonParameter : "silverData",
-    buttonTagType   : "BUTTON",
-    buttonValue     : "+",
-    pxChangeInS     : 3
+    switchValue      : 600,
+    activeClass      : "active",
+    navigationClass  : "silverNavigation",
+    buttonClass      : "silverSubpageAcces",
+    buttonParameter  : "silverData",
+    mobileClass      : "mobile",
+    buttonTagType    : "BUTTON",
+    menuButtonValue  : "---",
+    supButtonValue   : ">",
+    pxChangeInS      : 4
   };
   
+  var allMainULs = [];
   var allNavigations = document.getElementsByClassName(options.navigationClass);
   for (var a = 0; a < allNavigations.length; a++) {
     var currentNav = allNavigations[a];
     if (currentNav.children[0].tagName === "UL") {
-      searchForSubpage(currentNav.children[0].children);
+      var mainUL = currentNav.children[0];
+      allMainULs.push(mainUL);
+      searchForSubpage(mainUL.children);
+      var mobilOpenButton = document.createElement(options.buttonTagType);
+      mobilOpenButton[options.buttonParameter] = mainUL;
+      mobilOpenButton.innerHTML = options.menuButtonValue;
+      mobilOpenButton.addEventListener("click", expandToAutoHeight);
+      currentNav.insertBefore(mobilOpenButton, mainUL);
     }
   }
   
@@ -27,12 +39,15 @@ document.addEventListener("DOMContentLoaded", function () {
         if (nextChildren[y].tagName === "UL") {
           var nextUL = nextChildren[y];
           var viewButton = document.createElement(options.buttonTagType);
+          if (nextChildren[0].classList.contains(options.activeClass) === false) {
+            nextUL.style.height = "0px";
+            viewButton.addEventListener("click", expandToAutoHeight);
+          } else {
+            viewButton.addEventListener("click", collapseToNullHeight); 
+          }
           viewButton[options.buttonParameter] = nextUL;
           viewButton.classList.add(options.buttonClass);
-          viewButton.innerHTML = options.buttonValue;
-          viewButton.addEventListener("click", expandToAutoHeight);
-          nextUL.style.height = "0px";
-          nextUL.style.overflowY = "hidden";
+          viewButton.innerHTML = options.supButtonValue;
           nextUL.parentElement.insertBefore(viewButton, nextUL);
           searchForSubpage(nextUL.children);
         }
@@ -76,6 +91,46 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     requestAnimationFrame(heightChange);
   }
+  
+  function addForAllClass (elementList, cssClass) {
+    for (var x = 0; x < elementList.length; x++) {
+      elementList[x].classList.add(cssClass);  
+    }
+  }
+  
+  function removeForAllClass (elementList, cssClass) {
+    for (var x = 0; x < elementList.length; x++) {
+      elementList[x].classList.remove(cssClass);  
+    }
+  }
+  
+  function setStyleHeightForAll (elementList, value) {
+    for (var w = 0; w < elementList.length; w++) {
+      elementList[w].style.height = value; 
+    }
+  }
+  
+  if (window.innerWidth <= options.switchValue) {
+    var menuStatus = 1; 
+    addForAllClass(allNavigations, options.mobileClass);
+    setStyleHeightForAll(allMainULs, "0px");
+  } else {
+    var menuStatus = 0;
+    removeForAllClass(allNavigations, options.mobileClass);
+    setStyleHeightForAll(allMainULs, "");
+  }
+  
+  window.addEventListener("resize", function () {
+    if (menuStatus === 0 && window.innerWidth <= options.switchValue) {
+      menuStatus = 1;
+      addForAllClass(allNavigations, options.mobileClass);
+      setStyleHeightForAll(allMainULs, "0px");
+    } else if (menuStatus === 1 && window.innerWidth > options.switchValue) {
+      menuStatus = 0;
+      removeForAllClass(allNavigations, options.mobileClass);
+      setStyleHeightForAll(allMainULs, "");
+    }
+  });
 });
 
 
