@@ -1,0 +1,17 @@
+.silverNavigation {
+  padding: 0;
+  display: inline-block;
+}
+
+.silverNavigation ul {
+  margin: 0;
+  padding-left: 0.25rem;
+}
+
+.silverNavigation li {
+  list-style-type: none;
+}
+
+.silverNavigation a{
+  text-decoration: none;
+}
