@@ -17,7 +17,7 @@
   text-decoration: none;
 }
 
-.silverNavigation button {
+/*.silverNavigation button {
   display: none;
   cursor: pointer;
   border: none;
@@ -25,4 +25,4 @@
 
 .silverNavigation.mobile button {
   display: inline-block;  
-}
+}*/
