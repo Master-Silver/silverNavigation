@@ -1,102 +1,150 @@
-(function () {
+var silverNavigationStarter = function () {
   'use strict';
+  console.info("silverNavigation builder is called");
   var options = {
-    switchValue      : 600,
-    activeClassForLI : "active",
-    navigationClass  : "silverNavigation",
-    buttonParameter  : "silverData",
-    mobileClass      : "mobile",
-    buttonTagType    : "BUTTON",
-    menuButtonValue  : "---",
-    supButtonValue   : ">",
-    timeForAnimation : 1
+    switchValue       : 600,
+    activeClassForLI  : "active",
+    navigationClass   : "silverNavigation",
+    buttonTagType     : "BUTTON",
+    menuButtonValue   : "---",
+    supButtonValue    : ">",
+    timeForAnimation  : 1,
+    propertyParameter : "silverNavData"
   };
   
   var allMainULs = [];
-  var allNavigations = [];
   var allMobilOpenButtons = [];
+  var allViewButtons = [];
+  var allActiveSubUL = [];
+  var allNotActiveSubUL = [];
   
-  window.silverNavigationStart = function () {
-    alert("hello");
-    if (this.children[0] !== undefined && this.children[0].tagName === "UL") {
-      var mainUL = this.children[0];
-      var mobilOpenButton = document.createElement(options.buttonTagType);
-      var ULchildren = mainUL.children;
-      var zRunMax = ULchildren.length;
-      allNavigations.push(this);
-      allMainULs.push(mainUL);
-      allMobilOpenButtons.push(mobilOpenButton);
-      for (var z = 0; z < zRunMax; z++) {
-        var nextChildren = ULchildren[z].children;
-        var yRunMax = nextChildren.length;
-        for (var y = 0; y < yRunMax; y++) {
-          if (nextChildren[y].tagName === "UL") {
-            var nextUL = nextChildren[y];
-            var viewButton = document.createElement(options.buttonTagType);
-            if (ULchildren[z].classList.contains(options.activeClassForLI) === false) {
-              nextUL.style.height = "0px";
-              viewButton.addEventListener("click", expandToAutoHeight);
-            } else {
-              viewButton.addEventListener("click", collapseToNullHeight); 
-            }
-            viewButton[options.buttonParameter] = nextUL;
-            viewButton.innerHTML = options.supButtonValue;
-            nextUL.parentElement.insertBefore(viewButton, nextUL);
-            searchForSubpage(nextUL.children);
+  if (document.getElementsByClassName === undefined) {
+    var checkChildrenForCLass = function (childNodes, className, elementArray) {
+      var aRunMax = childNodes.length;
+      for (var a = 0; a < aRunMax; a++) {
+        var tempChildNode = childNodes[a];
+        if (tempChildNode !== undefined) {
+          var classNameOf = tempChildNode.className;
+          if (classNameOf !== undefined && classNameOf.indexOf(className) > -1) {
+            elementArray.push(tempChildNode);
           }
+          var childNodesOfTemp = tempChildNode.childNodes;
+          if (childNodesOfTemp !== undefined) {
+            checkChildrenForCLass(childNodesOfTemp, className, elementArray); 
+          }
+        }  
+      }
+    };
+    var getElementsByClassName = function (element, className) {
+      var elementArray = [];
+      if (element !== undefined) {
+        if (element.className.indexOf(className) > -1) {
+          elementArray.push(element);
+        }
+        var childNodes = element.childNodes;
+        if (childNodes !== undefined) {
+          checkChildrenForCLass(childNodes, className, elementArray);
+        }
+        if (elementArray.length >= 1) {
+          return elementArray;  
         }
       }
-      this.classList.add(options.navigationClass);
-      mobilOpenButton[options.buttonParameter] = mainUL;
-      mobilOpenButton.innerHTML = options.menuButtonValue;
-      mobilOpenButton.addEventListener("click", expandToAutoHeight);
-      this.insertBefore(mobilOpenButton, mainUL);
-    }
-  };
+      return [];
+    };
+  } else {
+    var getElementsByClassName = function (element, className) {
+      return element.getElementsByClassName(className);
+    };
+  }
   
-  /*var allNavigations = document.getElementsByClassName(options.navigationClass);
-  for (var a = 0; a < allNavigations.length; a++) {
-    var currentNav = allNavigations[a];
-    if (currentNav.children[0].tagName === "UL") {
-      var mainUL = currentNav.children[0];
-      allMainULs.push(mainUL);
-      searchForSubpage(mainUL.children);
-      var mobilOpenButton = document.createElement(options.buttonTagType);
-      mobilOpenButton[options.buttonParameter] = mainUL;
-      mobilOpenButton.innerHTML = options.menuButtonValue;
-      mobilOpenButton.addEventListener("click", expandToAutoHeight);
-      currentNav.insertBefore(mobilOpenButton, mainUL);
+  if (window.requestAnimationFrame === undefined) {
+    var runInNewFrame = [];
+    var runAnimationFrame = false;
+    var lastInterval = null;
+    var requestAnimationFrame = function (func) {
+      runInNewFrame.push(func);
+      if (runAnimationFrame === false) { 
+        lastInterval = setInterval(intervalForNewFrame, 1000/60);
+        runAnimationFrame = true;
+      }
+    };
+    var intervalForNewFrame = function () {
+      console.log(runInNewFrame.length);
+      if (runInNewFrame.length >= 1) {
+        var lokalCache = runInNewFrame;
+        runInNewFrame = [];
+        for (var f = 0; f < lokalCache.length; f++) {
+          lokalCache[f]();
+        }
+      } else {
+        clearInterval(lastInterval);
+        runAnimationFrame = false;
+      }
+    };
+  } else {
+    var requestAnimationFrame = window.requestAnimationFrame;
+  }
+  
+  var allNavigations = getElementsByClassName(document.body, options.navigationClass);
+  if (allNavigations.length < 1) {
+    console.warn("No element with the class '%s' found!", options.navigationClass);
+  } 
+  for (var b = 0; b < allNavigations.length; b++) {
+    var currentNav = allNavigations[b];
+    var navChildNodes = currentNav.childNodes;
+    for (var c = 0; c < navChildNodes.length; c++) {
+      var mainUL = navChildNodes[c];
+      if (mainUL.tagName === "UL") {
+        var mobilOpenButton = document.createElement(options.buttonTagType);
+        allMainULs.push(mainUL);
+        allMobilOpenButtons.push(mobilOpenButton);
+        searchForSubpage(mainUL.childNodes);
+        mobilOpenButton[options.propertyParameter] = mainUL;
+        mobilOpenButton.onclick = expandToAutoHeight;
+        mainUL.style.overflowY = "hidden";
+        mobilOpenButton.innerHTML = options.menuButtonValue;
+        currentNav.insertBefore(mobilOpenButton, mainUL);
+        c++;
+      }
     }
   }
   
-  function searchForSubpage (ULchildren) {
-    //console.log(ULchildren);
-    var zRunMax = ULchildren.length;
-    for (var z = 0; z < zRunMax; z++) {
-      var nextChildren = ULchildren[z].children;
-      var yRunMax = nextChildren.length;
-      for (var y = 0; y < yRunMax; y++) {
-        if (nextChildren[y].tagName === "UL") {
-          var nextUL = nextChildren[y];
-          var viewButton = document.createElement(options.buttonTagType);
-          if (ULchildren[z].classList.contains(options.activeClassForLI) === false) {
-            nextUL.style.height = "0px";
-            viewButton.addEventListener("click", expandToAutoHeight);
-          } else {
-            viewButton.addEventListener("click", collapseToNullHeight); 
+  function searchForSubpage (ULChildNodes) {
+    var dRunMax = ULChildNodes.length;
+    for (var d = 0; d < dRunMax; d++) {
+      var LI = ULChildNodes[d];
+      if (LI !== undefined && LI.tagName === "LI") {
+        var LIChildNodes = LI.childNodes;
+        var eRunMax = LIChildNodes.length;
+        for (var e = 0; e < eRunMax; e++) {
+          var subUL = LIChildNodes[e];
+          if (subUL !== undefined && subUL.tagName === "UL") {
+            var viewButton = document.createElement(options.buttonTagType);
+            allViewButtons.push(viewButton);
+            searchForSubpage(subUL.childNodes);
+            if (LI.className.indexOf(options.activeClassForLI) > -1) {
+              allActiveSubUL.push(subUL);
+              viewButton.onclick = collapseToNullHeight;  
+            } else {
+              allNotActiveSubUL.push(subUL);
+              subUL.style.height = "0px";
+              viewButton.onclick = expandToAutoHeight;
+            }
+            subUL[options.propertyParameter] = viewButton;
+            viewButton[options.propertyParameter] = subUL;
+            subUL.style.overflowY = "hidden";
+            viewButton.innerHTML = options.supButtonValue;
+            LI.insertBefore(viewButton, subUL);
+            e++;
           }
-          viewButton[options.buttonParameter] = nextUL;
-          viewButton.innerHTML = options.supButtonValue;
-          nextUL.parentElement.insertBefore(viewButton, nextUL);
-          searchForSubpage(nextUL.children);
         }
       }
     }
-  }*/
+  }
   
   function expandToAutoHeight () {
     var button = this;
-    var element = button[options.buttonParameter];
+    var element = button[options.propertyParameter];
     var targetHeight = element.scrollHeight;
     var startHeight = element.offsetHeight;
     var addingPerFrame = Math.round((targetHeight - startHeight) / (1000 * options.timeForAnimation / 60));
@@ -107,8 +155,7 @@
         requestAnimationFrame(heightChange);
       } else {
         element.style.height = "";
-        button.removeEventListener("click", expandToAutoHeight);
-        button.addEventListener("click", collapseToNullHeight);
+        button.onclick = collapseToNullHeight;
       }
     };
     requestAnimationFrame(heightChange);
@@ -116,7 +163,7 @@
   
   function collapseToNullHeight () {
     var button = this;
-    var element = button[options.buttonParameter];
+    var element = button[options.propertyParameter];
     var startHeight = element.offsetHeight;
     var removePerFrame = Math.round(startHeight / (1000 * options.timeForAnimation / 60));
     var heightChange = function () {
@@ -126,56 +173,76 @@
         requestAnimationFrame(heightChange);
       } else {
         element.style.height = "0px";
-        button.removeEventListener("click", collapseToNullHeight);
-        button.addEventListener("click", expandToAutoHeight);
+        button.onclick = expandToAutoHeight;
       }
     };
     requestAnimationFrame(heightChange);
   }
-  
-  function addForAllClass (elementList, cssClass) {
-    for (var x = 0; x < elementList.length; x++) {
-      elementList[x].classList.add(cssClass);  
+    
+  function changeStyleForAll (elementList, style, value) {
+    for (var f = 0; f < elementList.length; f++) {
+      elementList[f].style[style] = value;
     }
   }
   
-  function removeForAllClass (elementList, cssClass) {
-    for (var x = 0; x < elementList.length; x++) {
-      elementList[x].classList.remove(cssClass);  
-    }
-  }
-  
-  function setStyleHeightForAll (elementList, value) {
-    for (var w = 0; w < elementList.length; w++) {
-      elementList[w].style.height = value; 
-    }
-  }
-  
-  if (window.innerWidth <= options.switchValue) {
-    var menuStatus = 1; 
-    addForAllClass(allNavigations, options.mobileClass);
-    setStyleHeightForAll(allMainULs, "0px");
+  if (document.body.clientWidth <= options.switchValue) {
+    var menuStatus = 1;
+    changeStyleForAll(allMobilOpenButtons, "display", "inline-block");
+    changeStyleForAll(allViewButtons, "display", "inline-block");
+    changeStyleForAll(allMainULs, "height", "0px");
   } else {
     var menuStatus = 0;
-    removeForAllClass(allNavigations, options.mobileClass);
-    setStyleHeightForAll(allMainULs, "");
+    changeStyleForAll(allMobilOpenButtons, "display", "none");
+    changeStyleForAll(allViewButtons, "display", "none");
+    changeStyleForAll(allMainULs, "height", "");
   }
   
-  window.addEventListener("resize", function () {
-    if (menuStatus === 0 && window.innerWidth <= options.switchValue) {
+  var changesForResize = function () {
+    if (menuStatus === 0 && document.body.clientWidth <= options.switchValue) {
       menuStatus = 1;
       for (var v = 0;v < allMobilOpenButtons.length; v++) {
-        allMobilOpenButtons[v].removeEventListener("click", collapseToNullHeight);
-        allMobilOpenButtons[v].addEventListener("click", expandToAutoHeight);
+        allMobilOpenButtons[v].onclick = expandToAutoHeight;
       }
-      addForAllClass(allNavigations, options.mobileClass);
-      setStyleHeightForAll(allMainULs, "0px");
-    } else if (menuStatus === 1 && window.innerWidth > options.switchValue) {
+      changeStyleForAll(allMobilOpenButtons, "display", "inline-block");
+      changeStyleForAll(allViewButtons, "display", "inline-block");
+      changeStyleForAll(allMainULs, "height", "0px");
+    } else if (menuStatus === 1 && document.body.clientWidth > options.switchValue) {
       menuStatus = 0;
-      removeForAllClass(allNavigations, options.mobileClass);
-      setStyleHeightForAll(allMainULs, "");
+      changeStyleForAll(allMobilOpenButtons, "display", "none");
+      changeStyleForAll(allViewButtons, "display", "none");
+      changeStyleForAll(allMainULs, "height", "");
+      changeStyleForAll(allActiveSubUL, "height", "");
+      changeStyleForAll(allNotActiveSubUL, "height", "0px");
+      for (var u = 0; u < allActiveSubUL.length; u++) {
+        allActiveSubUL[u][options.propertyParameter].onclick = collapseToNullHeight;
+      }
+      for (var t = 0; t < allNotActiveSubUL.length; t++) {
+        allNotActiveSubUL[t][options.propertyParameter].onclick = expandToAutoHeight;
+      }
     }
-  });
-})();
+  };
+  
+  if (window.addEventListener) {
+    window.addEventListener("resize", changesForResize);
+  } else if (window.onresize === null) {
+    window.onresize = changesForResize;
+  } else {
+    var oldResizeFunc = window.onresize;
+    window.onresize = function () {
+      oldResizeFunc();
+      changesForResize();
+    };
+  }
+};
 
-
+if (document.addEventListener) {
+  document.addEventListener("DOMContentLoaded", silverNavigationStarter);
+} else if (window.onload === null) {
+  window.onload = silverNavigationStarter;
+} else {
+  var priorOnloadFuncSure = window.onload;
+  window.onload = function () {
+    priorOnloadFuncSure();
+    silverNavigationStarterSure();
+  };
+}

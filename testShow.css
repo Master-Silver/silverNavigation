@@ -4,7 +4,6 @@
 }
 
 .silverNavigation ul {
-  overflow-y: hidden;
   margin: 0;
   padding-left: 0.25rem;
 }
@@ -16,13 +15,3 @@
 .silverNavigation a {
   text-decoration: none;
 }
-
-/*.silverNavigation button {
-  display: none;
-  cursor: pointer;
-  border: none;
-}
-
-.silverNavigation.mobile button {
-  display: inline-block;  
-}*/
