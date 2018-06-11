@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+}
+
+@media (min-width: 769px) {
+  .silverNavigation.justOneSub li {
+    display: inline-block;
+  }
+
+  .silverNavigation.justOneSub > ul > li.active {
+    margin-bottom: 2.25rem;
+  }
+
+  .silverNavigation.justOneSub ul {
+    position: relative;
+    text-align: center;
+  }
+
+  .silverNavigation.justOneSub > ul ul {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+}

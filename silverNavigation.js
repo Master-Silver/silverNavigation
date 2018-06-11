@@ -2,14 +2,15 @@ var silverNavigationStarter = function () {
   'use strict';
   console.info("silverNavigation builder is called");
   var options = {
-    switchValue       : 600,
+    switchValue       : 768,
     activeClassForLI  : "active",
     navigationClass   : "silverNavigation",
     buttonTagType     : "BUTTON",
     menuButtonValue   : "---",
     supButtonValue    : ">",
     timeForAnimation  : 1,
-    propertyParameter : "silverNavData"
+    propertyParameter : "silverNavData",
+    switchHorizontal  : false
   };
   
   var allMainULs = [];
