@@ -1,60 +1,64 @@
 var silverNavigationStarter = function () {
   'use strict';
+  console.info("silverNavigation builder is called");
   var options = {
-    switchValue       : 600,
+    switchValue       : 768,
     activeClassForLI  : "active",
     navigationClass   : "silverNavigation",
     buttonTagType     : "BUTTON",
     menuButtonValue   : "---",
     supButtonValue    : ">",
     timeForAnimation  : 1,
-    propertyParameter : "silverNavData"
+    propertyParameter : "silverNavData",
+    switchHorizontal  : false
   };
+  
+  var remInPixel;
+  function refreshRemInPixel () {
+    remInPixel = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    return remInPixel;
+  }
+  refreshRemInPixel();
+  
+  function findAndReturnValueData (dataString, toFind) {
+    var start = dataString.indexOf(toFind);
+    var data = "";
+    if (start !== -1) {
+      start += toFind;
+      if (start === "=") {
+        for (start += 1; start < dataString.length; start++) {
+          var tempChar = dataString[start];
+          if (tempChar === "," || tempChar === " ") {
+            break;
+          }
+          data += tempChar;
+        }
+      }
+    }
+    return data;
+  }
+  
+  var allNavigations = [];
+  (function(){
+    var tempAllNavList = document.getElementsByTagName("NAV");
+    for (var tempCount; tempCount < tempAllNavList.length; tempCount++) {
+      var tempNav = tempAllNavList[tempCount];
+      var tempData = tempNav.getAttribute("data-silvernavigation");
+      if (tempData !== null && tempData !== "") {
+        var tempDataValue = findAndReturnValueData(tempData, "switchPoint");
+        if (tempDataValue === "") {
+          
+        }
+      }
+    }
+  })();
+
   
   var allMainULs = [];
   var allMobilOpenButtons = [];
   var allViewButtons = [];
   var allActiveSubUL = [];
   var allNotActiveSubUL = [];
-  
-  if (document.getElementsByClassName === undefined) {
-    var checkChildrenForCLass = function (childNodes, className, elementArray) {
-      var aRunMax = childNodes.length;
-      for (var a = 0; a < aRunMax; a++) {
-        var tempChildNode = childNodes[a];
-        if (tempChildNode !== undefined) {
-          var classNameOf = tempChildNode.className;
-          if (classNameOf !== undefined && classNameOf.indexOf(className) > -1) {
-            elementArray.push(tempChildNode);
-          }
-          var childNodesOfTemp = tempChildNode.childNodes;
-          if (childNodesOfTemp !== undefined) {
-            checkChildrenForCLass(childNodesOfTemp, className, elementArray); 
-          }
-        }  
-      }
-    };
-    var getElementsByClassName = function (element, className) {
-      var elementArray = [];
-      if (element !== undefined) {
-        if (element.className.indexOf(className) > -1) {
-          elementArray.push(element);
-        }
-        var childNodes = element.childNodes;
-        if (childNodes !== undefined) {
-          checkChildrenForCLass(childNodes, className, elementArray);
-        }
-        if (elementArray.length >= 1) {
-          return elementArray;  
-        }
-      }
-      return [];
-    };
-  } else {
-    var getElementsByClassName = function (element, className) {
-      return element.getElementsByClassName(className);
-    };
-  }
   
   if (window.requestAnimationFrame === undefined) {
     var runInNewFrame = [];
@@ -100,6 +104,7 @@ var silverNavigationStarter = function () {
         searchForSubpage(mainUL.childNodes);
         mobilOpenButton[options.propertyParameter] = mainUL;
         mobilOpenButton.onclick = expandToAutoHeight;
+        mainUL.style.overflowY = "hidden";
         mobilOpenButton.innerHTML = options.menuButtonValue;
         currentNav.insertBefore(mobilOpenButton, mainUL);
         c++;
@@ -130,6 +135,7 @@ var silverNavigationStarter = function () {
             }
             subUL[options.propertyParameter] = viewButton;
             viewButton[options.propertyParameter] = subUL;
+            subUL.style.overflowY = "hidden";
             viewButton.innerHTML = options.supButtonValue;
             LI.insertBefore(viewButton, subUL);
             e++;
@@ -229,17 +235,17 @@ var silverNavigationStarter = function () {
       oldResizeFunc();
       changesForResize();
     };
-  } 
+  }
 };
 
 if (document.addEventListener) {
   document.addEventListener("DOMContentLoaded", silverNavigationStarter);
-} else if (document.body.onload === null) {
-  document.body.onload = silverNavigationStarter;
+} else if (window.onload === null) {
+  window.onload = silverNavigationStarter;
 } else {
-  var oldOnloadFuncSure = document.body.onload;
-  document.body.onload = function () {
-    oldOnloadFuncSure();
-    silverNavigationStarter();
+  var priorOnloadFuncSure = window.onload;
+  window.onload = function () {
+    priorOnloadFuncSure();
+    silverNavigationStarterSure();
   };
 }
