@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   var defaults = {
     switchPoint       : "768px",
-    animationTime     : 0.7,
+    animationTime     : 1,
     buttonTagType     : "BUTTON",
     subButtonContent  : ">",
     mainButtonContent : "menu"
@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   var options = {
     activeClassForLI  : "active",
+    openButtonClass   : "open",
     navigationClass   : "silverNavigation",
     propertyParameter : "silverNavData"
   };
@@ -43,11 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return data;
   }
   
-  var allMainULs = [];
-  var allMainButtons = [];
-  var allSubButtons = [];
-  var allActiveSubUL = [];
-  var allNotActiveSubUL = [];
   var allSilverNavigations;
   (function(){
     allSilverNavigations = document.getElementsByClassName(options.navigationClass);
@@ -65,16 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
             var subUL = LIChildren[e];
             if (subUL.tagName === "UL") {
               var subButton = document.createElement(buttonTagType);
-              allSubButtons.push(subButton);
               var subULChildrenLength = subUL.children.length;
+              silverNavData.buttons.push(subButton);
               searchForSubpage(subUL.children);
               if (LI.className.indexOf(options.activeClassForLI) > -1) {
-                allActiveSubUL.push(subUL);
-                subButton.addEventListener("click", collapseToNullHeight);
+                silverNavData.activeULs.push(subUL);
               } else {
-                allNotActiveSubUL.push(subUL);
-                subUL.style.height = "0px";
-                subButton.addEventListener("click", expandToAutoHeight);
+                silverNavData.normalULs.push(subUL);
               }
               subUL[options.propertyParameter] = subButton;
               subButton[options.propertyParameter] = {
@@ -99,8 +92,11 @@ document.addEventListener("DOMContentLoaded", function () {
       var subButtonContent = defaults.subButtonContent;
       var mainButtonContent = defaults.mainButtonContent;
       tempNav[options.propertyParameter] = {
-        switchPoint       : defaults.switchPoint,
-        status            : 0
+        switchPoint : defaults.switchPoint,
+        status      : 0,
+        buttons     : [],
+        normalULs   : [],
+        activeULs   : []
       };
       var silverNavData = tempNav[options.propertyParameter];
       if (tempData !== null && tempData !== "") {
@@ -131,20 +127,21 @@ document.addEventListener("DOMContentLoaded", function () {
         if (mainUL.tagName === "UL") {
           var mainButton = document.createElement(buttonTagType);
           var mainULChildrenLength = mainUL.children.length;
-          allMainULs.push(mainUL);
-          allMainButtons.push(mainButton);
+          silverNavData.normalULs.push(mainUL);
+          silverNavData.buttons.push(mainButton);
           searchForSubpage(mainUL.children);
+          mainUL[options.propertyParameter] = mainButton;
           mainButton[options.propertyParameter] = {
             target        : mainUL,
             animationTime : animationTime * (mainULChildrenLength / 5)
           };
-          mainButton.addEventListener("click", expandToAutoHeight);
           mainUL.style.overflowY = "hidden";
           mainButton.innerHTML = mainButtonContent;
           tempNav.insertBefore(mainButton, mainUL);
           break;
         }
       }
+      changeToDesktop(tempNav);
     }
   })();
 
@@ -175,6 +172,21 @@ document.addEventListener("DOMContentLoaded", function () {
     var requestAnimationFrame = window.requestAnimationFrame;
   }
   
+  function addClass (element, classString) {
+    var className = element.className;
+    if (className.indexOf(classString) === -1) {
+      element.className = className + classString;
+    }
+  }
+  
+  function removeClass (element, classString) {
+    var className = element.className;
+    while (className.indexOf(classString) > -1) {
+      className = className.replace(classString, "");
+    }
+    element.className = className;
+  }
+  
   function expandToAutoHeight () {
     var button = this;
     var element = button[options.propertyParameter].target;
@@ -192,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", collapseToNullHeight);
       }
     };
+    addClass(button, options.openButtonClass);
     requestAnimationFrame(heightChange);
   }
   
@@ -206,6 +219,7 @@ document.addEventListener("DOMContentLoaded", function () {
         element.style.height = startHeight + "px";
         requestAnimationFrame(heightChange);
       } else {
+        removeClass(button, options.openButtonClass);
         element.style.height = "0px";
         button.removeEventListener("click", collapseToNullHeight);
         button.addEventListener("click", expandToAutoHeight);
@@ -213,29 +227,54 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     requestAnimationFrame(heightChange);
   }
-    
-  function changeStyleForAll (elementList, style, value) {
-    for (var f = 0; f < elementList.length; f++) {
-      elementList[f].style[style] = value;
+  
+  function changeToDesktop (navigation) {
+    var data = navigation[options.propertyParameter];
+    var normalULs = data.normalULs;
+    var activeULs = data.activeULs;
+    var buttons = data.buttons;
+    for (var h = 1; h < normalULs.length; h++) {
+      normalULs[h].style.height = "0px";  
+    }
+    normalULs[0].style.height = "";
+    for (h = 0; h < activeULs.length; h++) {
+      activeULs[h].style.height = "";  
+    }
+    for (h = 0; h < buttons.length; h++) {
+      buttons[h].style.display = "none";
     }
   }
   
-  if (document.body.clientWidth <= options.switchValue) {
-    var menuStatus = 1;
-    changeStyleForAll(allMainButtons, "display", "inline-block");
-    changeStyleForAll(allSubButtons, "display", "inline-block");
-    changeStyleForAll(allMainULs, "height", "0px");
-  } else {
-    var menuStatus = 0;
-    changeStyleForAll(allMainButtons, "display", "none");
-    changeStyleForAll(allSubButtons, "display", "none");
-    changeStyleForAll(allMainULs, "height", "");
+  function changeToMobile (navigation) {
+    var data = navigation[options.propertyParameter];
+    var normalULs = data.normalULs;
+    var activeULs = data.activeULs;
+    var buttons = data.buttons;
+    var openButtonClass = options.openButtonClass;
+    for (var h = 0; h < buttons.length; h++) {
+      var tempButton = buttons[h];
+      tempButton.removeEventListener("click", collapseToNullHeight);
+      tempButton.addEventListener("click", expandToAutoHeight);
+      removeClass(tempButton, openButtonClass);
+      tempButton.style.display = "";
+    }
+    for (h = 0; h < activeULs.length; h++) {
+      var tempActiveUL = activeULs[h];
+      tempButton = tempActiveUL[options.propertyParameter];
+      tempButton.removeEventListener("click", expandToAutoHeight);
+      tempButton.addEventListener("click", collapseToNullHeight);
+      addClass(tempButton, openButtonClass);
+      tempActiveUL.style.height = "";
+    }
+    for (h = 0; h < normalULs.length; h++) {
+      normalULs[h].style.height = "0px";  
+    }
   }
   
-  var changesForResize = function () {
+  function changesForResize () {
     refreshRemInPixel();
     var windowInnerWidth = window.innerWidth;
-    for (g = 0; g < allSilverNavigations.length; g++) {
+    for (var g = 0; g < allSilverNavigations.length; g++) {
       var tempNavigation = allSilverNavigations[g];
       var tempData = tempNavigation[options.propertyParameter];
       var switchPoint = parseFloat(tempData.switchPoint);
@@ -244,33 +283,13 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (tempData.status === 0 && windowInnerWidth <= switchPoint) {
         tempData.status = 1;
-        for (var v = 0;v < allMainButtons.length; v++) {
-          allMainButtons[v].removeEventListener("click", collapseToNullHeight);
-          allMainButtons[v].addEventListener("click", expandToAutoHeight);
-        }
-        changeStyleForAll(allMainButtons, "display", "inline-block");
-        changeStyleForAll(allSubButtons, "display", "inline-block");
-        changeStyleForAll(allMainULs, "height", "0px");
+        changeToMobile(tempNavigation);
       } else if (tempData.status === 1 && windowInnerWidth > switchPoint) {
         tempData.status = 0;
-        changeStyleForAll(allMainButtons, "display", "none");
-        changeStyleForAll(allSubButtons, "display", "none");
-        changeStyleForAll(allMainULs, "height", "");
-        changeStyleForAll(allActiveSubUL, "height", "");
-        changeStyleForAll(allNotActiveSubUL, "height", "0px");
-        for (var u = 0; u < allActiveSubUL.length; u++) {
-          var tempButton = allActiveSubUL[u][options.propertyParameter];
-          tempButton.removeEventListener("click", expandToAutoHeight);
-          tempButton.addEventListener("click", collapseToNullHeight);
-        }
-        for (var t = 0; t < allNotActiveSubUL.length; t++) {
-          tempButton = allNotActiveSubUL[t][options.propertyParameter];
-          tempButton.removeEventListener("click", collapseToNullHeight);
-          tempButton.addEventListener("click", expandToAutoHeight);
-        }
+        changeToDesktop(tempNavigation);
       }
     }
   };
-  
+  changesForResize();
   window.addEventListener("resize", changesForResize);
 });
