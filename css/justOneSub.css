@@ -7,7 +7,8 @@ body {
     display: inline-block;
   }
 
-  .silverNavigation.justOneSub > ul > li.active {
+  .silverNavigation.justOneSub > ul > li.active,
+  .silverNavigation.justOneSub:hover > ul > li {
     margin-bottom: 2.25rem;
   }
 

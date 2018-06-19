@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     switchPoint       : "768px",
     animationTime     : 1,
     buttonTagType     : "BUTTON",
-    subButtonContent  : ">",
-    mainButtonContent : "menu"
+    subButtonContent  : '<svg viewBox="0 0 8 8"><path d="M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z" /></svg>',
+    mainButtonContent : '<svg viewBox="0 0 8 8"><path d="M0 1v1h8v-1h-8zm0 2.969v1h8v-1h-8zm0 3v1h8v-1h-8z" /></svg>'
   };
   
   var options = {

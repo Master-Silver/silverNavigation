@@ -6,8 +6,8 @@ var silverNavigationStarter = function () {
     activeClassForLI  : "active",
     navigationClass   : "silverNavigation",
     buttonTagType     : "BUTTON",
-    menuButtonValue   : "---",
-    supButtonValue    : ">",
+    menuButtonValue   : "Menu",
+    supButtonValue    : "+",
     timeForAnimation  : 1,
     propertyParameter : "silverNavData",
     switchHorizontal  : false
