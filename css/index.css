@@ -1,0 +1,112 @@
+.silverNavigation {
+  display: inline-block;
+  border-radius: 0.5rem;
+  border: solid 0.125rem silver;
+  background-color: #999966;
+}
+
+.silverNavigation ul {
+  margin: 0;
+  padding-left: 0;
+}
+
+.silverNavigation li {
+  list-style-type: none;
+  border-top: solid 0.0625rem silver;
+}
+
+.silverNavigation a {
+  text-decoration: none;
+  padding: 0.5rem 0.25rem;
+  display: block;
+  color: white;
+}
+
+.silverNavigation a:hover {
+  font-style: italic;
+}
+
+.silverNavigation li.active > a {
+  color: gold;
+}
+
+.silverNavigation > ul > li:first-child {
+  border-top: none;
+}
+
+.silverNavigation ul ul a {
+  margin-left: 0.25rem;
+}
+
+.silverNavigation ul ul ul a {
+  margin-left: 0.5rem;
+}
+
+.silverNavigation ul ul ul ul a {
+  margin-left: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .silverNavigation a {
+    margin-right: 2rem;
+  }
+  
+  .silverNavigation li {
+    position: relative;  
+  }
+  
+  .silverNavigation ul li button {
+    position: absolute;
+    right: 0;
+    top: 0.5rem;
+    width: 2rem;
+    border-radius: 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .silverNavigation.justOneSub {
+    min-width: 40rem;
+  } 
+    
+  .silverNavigation.justOneSub li {
+    display: inline-block;
+    border-top: none;
+  }
+  
+  .silverNavigation.justOneSub ul {
+    position: relative;
+    text-align: center;
+  }
+
+  .silverNavigation.justOneSub > ul ul {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  .silverNavigation.justOneSub > ul > li.active,
+  .silverNavigation.justOneSub:hover > ul > li {
+    margin-bottom: 2.25rem;
+  }
+  
+  .silverNavigation.justOneSub > ul:hover > li ul {
+    display: none;
+  }
+  
+  .silverNavigation.justOneSub > ul > li:hover ul {
+    display: block;
+    height: auto !important;
+  }
+  
+  .silverNavigation.justOneSub > ul > li:hover ul,
+  .silverNavigation.justOneSub > ul > li.active ul {
+    border-top: solid 0.0625rem silver;     
+  }
+  
+  .silverNavigation.justOneSub > ul > li ul:hover {
+    display: block;     
+  }
+}
+

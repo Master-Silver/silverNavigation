@@ -1,0 +1,39 @@
+@media (min-width: 769px) {
+  .silverNavigation.justOneSub {
+    min-width: 40rem;
+  } 
+    
+  .silverNavigation.justOneSub ul {
+    position: relative;
+    text-align: center;
+  }
+  
+  .silverNavigation.justOneSub li {
+    display: inline-block;
+  }
+  
+  .silverNavigation.justOneSub > ul ul {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  .silverNavigation.justOneSub > ul > li.active,
+  .silverNavigation.justOneSub:hover > ul > li {
+    margin-bottom: 2rem;
+  }
+  
+  .silverNavigation.justOneSub > ul:hover > li ul {
+    display: none;
+  }
+  
+  .silverNavigation.justOneSub > ul > li:hover ul {
+    display: block;
+    height: auto !important;
+  }
+  
+  .silverNavigation.justOneSub > ul > li ul:hover {
+    display: block;     
+  }
+}

@@ -1,0 +1,16 @@
+@media (max-width: 768px) {
+  .silverNavigation a {
+    margin-right: 2rem;
+  }
+  
+  .silverNavigation li {
+    position: relative;  
+  }
+  
+  .silverNavigation ul li button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 2rem;
+  }
+}
