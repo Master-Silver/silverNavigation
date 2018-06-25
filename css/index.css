@@ -1,13 +1,10 @@
 html {
   height: 100%;
-  background: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 27%,rgba(32,124,202,1) 65%,rgba(125,185,232,1) 95%);
-}
-
-.silverNavigation {
-  display: inline-block;
+  background: linear-gradient(to bottom, rgba(179,220,237,1) 0%,rgba(41,184,229,1) 50%,rgba(188,224,238,1) 100%);
 }
 
 .silverNavigation ul {
+  background: linear-gradient(to bottom, rgba(59,122,123,1) 0%,rgba(25,88,93,1) 50%,rgba(46,122,134,1) 100%);
   margin: 0;
   padding-left: 0;
 }
@@ -15,21 +12,34 @@ html {
 .silverNavigation li {
   list-style-type: none;
   border-top: solid 0.0625rem silver;
+  border-left: solid 0.125rem silver;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+.silverNavigation li:hover {
+  background-color: #b3ffff;  
 }
 
 .silverNavigation a {
   text-decoration: none;
   padding: 0.5rem 0.25rem;
   display: block;
-  color: #edc5d9;
+  color: white;
 }
 
 .silverNavigation a:hover {
+  color: black;
   font-style: italic;
 }
 
 .silverNavigation li.active > a {
   color: gold;
+}
+
+.silverNavigation.horizontal > ul > li.active,
+.silverNavigation.horizontal > ul > li.subpages:hover {
+  margin-bottom: 2.25rem;
 }
 
 .silverNavigation > ul > li:first-child {
@@ -67,6 +77,20 @@ html {
   
   .silverNavigation.horizontal > ul > li {
     transition: margin 0.5s;
+  }
+  
+  #sideNav {
+    display: inline-block;
+    width: 10rem;
+    float: left;
+  }
+  
+  #content {
+    display: inline-block;
+    width: calc(100% - 10rem);
+  }
+  
+  #headNav {
   }
 }
 
