@@ -13,7 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var options = {
     activeClassForLI  : "active",
     openButtonClass   : "open",
+    subpageULClass    : "subpages",
     navigationClass   : "silverNavigation",
+    horizontalClass   : "horizontal",
     propertyParameter : "silverNavData"
   };
 
@@ -75,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 animationTime : animationTime * (subULChildrenLength / 5)
               };
               subUL.style.overflowY = "hidden";
+              addClass(LI, options.subpageULClass);
               subButton.innerHTML = subButtonContent;
               LI.insertBefore(subButton, subUL);
               e++;
@@ -270,7 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
       normalULs[h].style.height = "0px";  
     }
   }
-  
+
   function changesForResize () {
     refreshRemInPixel();
     var windowInnerWidth = window.innerWidth;

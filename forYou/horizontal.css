@@ -1,39 +1,34 @@
 @media (min-width: 769px) {
-  .silverNavigation.justOneSub {
+  .silverNavigation.horizontal {
     min-width: 40rem;
   } 
     
-  .silverNavigation.justOneSub ul {
+  .silverNavigation.horizontal ul {
     position: relative;
-    text-align: center;
   }
   
-  .silverNavigation.justOneSub li {
+  .silverNavigation.horizontal li {
     display: inline-block;
   }
   
-  .silverNavigation.justOneSub > ul ul {
+  .silverNavigation.horizontal > ul ul {
     position: absolute;
     left: 0;
     bottom: 0;
     right: 0;
   }
 
-  .silverNavigation.justOneSub > ul > li.active,
-  .silverNavigation.justOneSub:hover > ul > li {
+  .silverNavigation.horizontal > ul > li.active,
+  .silverNavigation.horizontal > ul > li.subpages:hover {
     margin-bottom: 2rem;
   }
   
-  .silverNavigation.justOneSub > ul:hover > li ul {
-    display: none;
-  }
-  
-  .silverNavigation.justOneSub > ul > li:hover ul {
+  .silverNavigation.horizontal > ul > li:hover ul {
     display: block;
     height: auto !important;
   }
   
-  .silverNavigation.justOneSub > ul > li ul:hover {
+  .silverNavigation.horizontal > ul > li ul:hover {
     display: block;     
   }
 }
