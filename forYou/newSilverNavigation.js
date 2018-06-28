@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     switchPoint       : "768px",
     animationTime     : 1,
     buttonTagType     : "BUTTON",
-    subButtonContent  : '<svg viewBox="0 0 8 8"><path d="M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z" /></svg>',
-    mainButtonContent : '<svg viewBox="0 0 8 8"><path d="M0 1v1h8v-1h-8zm0 2.969v1h8v-1h-8zm0 3v1h8v-1h-8z" /></svg>'
+    subButtonContent  : '<svg viewBox="0 0 1024 1024"><path d="M256 1024c-6.552 0-13.102-2.499-18.101-7.499-9.998-9.997-9.998-26.206 0-36.203l442.698-442.698-442.698-442.699c-9.998-9.997-9.998-26.206 0-36.203s26.206-9.998 36.203 0l460.8 460.8c9.998 9.997 9.998 26.206 0 36.203l-460.8 460.8c-5 5-11.55 7.499-18.102 7.499z" /></svg>',
+    mainButtonContent : 'Menü'
   };
   
   var options = {

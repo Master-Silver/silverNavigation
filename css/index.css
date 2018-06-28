@@ -1,45 +1,44 @@
 html {
   height: 100%;
-  background: linear-gradient(to bottom, rgba(179,220,237,1) 0%,rgba(41,184,229,1) 50%,rgba(188,224,238,1) 100%);
+  background: linear-gradient(to bottom, rgba(245,245,245,1) 0%,rgba(233,233,233,1) 30%,rgba(228,228,228,1) 59%,rgba(245,245,245,1) 100%);
+}
+
+h1 {
+  color: silver;
 }
 
 .silverNavigation ul {
-  background: linear-gradient(to bottom, rgba(59,122,123,1) 0%,rgba(25,88,93,1) 50%,rgba(46,122,134,1) 100%);
+  background: white;
   margin: 0;
   padding-left: 0;
 }
 
-.silverNavigation li {
-  list-style-type: none;
-  border-top: solid 0.0625rem silver;
-  border-left: solid 0.125rem silver;
-  border-top-left-radius: 1rem;
-  border-bottom-left-radius: 1rem;
+.silverNavigation > ul {
+  border: solid 0.0625rem silver;
+  border-radius: 0.125rem;
 }
 
-.silverNavigation li:hover {
-  background-color: #b3ffff;  
+.silverNavigation li {
+  list-style-type: none;
 }
+
+/*.silverNavigation li:hover {
+  background-color: #cc6699;  
+}*/
 
 .silverNavigation a {
   text-decoration: none;
   padding: 0.5rem 0.25rem;
   display: block;
-  color: white;
-}
-
-.silverNavigation a:hover {
-  color: black;
-  font-style: italic;
+  color: #9e9e9e;
 }
 
 .silverNavigation li.active > a {
-  color: gold;
+  color: #ffcc00;
 }
 
-.silverNavigation.horizontal > ul > li.active,
-.silverNavigation.horizontal > ul > li.subpages:hover {
-  margin-bottom: 2.25rem;
+.silverNavigation li:hover > a {
+  color: #cc6699;
 }
 
 .silverNavigation > ul > li:first-child {
@@ -62,12 +61,48 @@ html {
   border-radius: 1rem;
 }
 
-@media (min-width: 769px) {
+@media (max-width: 48rem) {
+  #sideNav > button {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    height: 4rem;
+    width: 5rem;
+    border-radius: 0.75rem;
+    color: #cc6699;
+    font-size: 1.25rem;
+    border-color: #cc6699;
+    border-width: 0.25rem;
+  }
+}
+
+@media (min-width: 48.0625rem) {
+  h1 {
+    text-align: center;
+  }
+    
+  .silverNavigation li.active > a {
+    border-bottom: solid 0.125rem;
+    border-bottom-left-radius: 0.75rem;       
+  }
+    
   .silverNavigation.horizontal ul {
     text-align: center;     
   } 
   .silverNavigation.horizontal > ul li {
     border-top: none;     
+  }
+  
+  .silverNavigation.horizontal li.active > a {
+    border-bottom: none;
+    border-left: solid 0.125rem;
+    border-right: solid 0.125rem;
+    border-radius: 0.25rem;
+  }
+  
+  .silverNavigation.horizontal > ul > li.subpages.active,
+  .silverNavigation.horizontal > ul > li.subpages:hover {
+    margin-bottom: 2.25rem;
   }
     
   .silverNavigation.horizontal > ul > li:hover ul,
@@ -87,7 +122,8 @@ html {
   
   #content {
     display: inline-block;
-    width: calc(100% - 10rem);
+    width: calc(100% - 11rem);
+    padding: 0 0.5rem;
   }
   
   #headNav {
