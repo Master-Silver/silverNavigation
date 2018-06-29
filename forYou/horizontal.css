@@ -1,8 +1,4 @@
 @media (min-width: 48.0625rem) {
-  .silverNavigation.horizontal {
-    min-width: 40rem;
-  } 
-    
   .silverNavigation.horizontal ul {
     position: relative;
   }
@@ -19,16 +15,19 @@
   }
 
   .silverNavigation.horizontal > ul > li.subpages.active,
-  .silverNavigation.horizontal > ul > li.subpages:hover {
+  .silverNavigation.horizontal > ul > li.subpages:hover,
+  .silverNavigation.horizontal > ul > li.subpages:active {
     margin-bottom: 2rem;
   }
   
-  .silverNavigation.horizontal > ul > li:hover ul {
+  .silverNavigation.horizontal > ul > li:hover ul,
+  .silverNavigation.horizontal > ul > li:active ul {
     display: block;
     height: auto !important;
   }
   
-  .silverNavigation.horizontal > ul > li ul:hover {
+  /*.silverNavigation.horizontal > ul > li ul:hover
+  .silverNavigation.horizontal > ul > li ul:acitve {
     display: block;     
-  }
+  }*/
 }

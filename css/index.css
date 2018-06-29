@@ -33,6 +33,10 @@ h1 {
   color: #6c6c6c;
 }
 
+.silverNavigation button {
+  cursor: pointer;
+}
+
 .silverNavigation li.active > a {
   color: #ffcc00;
 }
@@ -99,6 +103,10 @@ h1 {
   
   .silverNavigation a {
     margin-right: 2.25rem;
+  }
+  
+  .silverNavigation a:only-child {
+    margin-right: 0;
   }
   
   .silverNavigation > ul button svg {
