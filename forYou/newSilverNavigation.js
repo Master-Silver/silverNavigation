@@ -191,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   function expandToAutoHeight () {
+    this.removeEventListener("click", expandToAutoHeight);
     var button = this;
     var element = button[options.propertyParameter].target;
     var targetHeight = element.scrollHeight;
@@ -203,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
         requestAnimationFrame(heightChange);
       } else {
         element.style.height = "";
-        button.removeEventListener("click", expandToAutoHeight);
         button.addEventListener("click", collapseToNullHeight);
       }
     };
@@ -212,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   function collapseToNullHeight () {
+    this.removeEventListener("click", collapseToNullHeight);
     var button = this;
     var element = button[options.propertyParameter].target;
     var startHeight = element.offsetHeight;
@@ -224,7 +225,6 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         removeClass(button, options.openButtonClass);
         element.style.height = "0px";
-        button.removeEventListener("click", collapseToNullHeight);
         button.addEventListener("click", expandToAutoHeight);
       }
     };
