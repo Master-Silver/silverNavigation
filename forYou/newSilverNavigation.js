@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
   var defaults = {
     switchPoint       : "768px",
-    animationTime     : 1,
+    animationTime     : .3,
     buttonTagType     : "BUTTON",
     subButtonContent  : '<svg viewBox="0 0 1024 1024"><path d="M256 1024c-6.552 0-13.102-2.499-18.101-7.499-9.998-9.997-9.998-26.206 0-36.203l442.698-442.698-442.698-442.699c-9.998-9.997-9.998-26.206 0-36.203s26.206-9.998 36.203 0l460.8 460.8c9.998 9.997 9.998 26.206 0 36.203l-460.8 460.8c-5 5-11.55 7.499-18.102 7.499z" /></svg>',
     mainButtonContent : 'Menü'
@@ -17,9 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     navigationClass   : "silverNavigation",
     horizontalClass   : "horizontal",
     propertyParameter : "silverNavData"
-  };
-
-
+  }; 
   
   var remInPixel;
   function refreshRemInPixel () {
@@ -74,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
               subUL[options.propertyParameter] = subButton;
               subButton[options.propertyParameter] = {
                 target        : subUL,
-                animationTime : animationTime * (subULChildrenLength / 5)
+                animationTime : Math.round(animationTime * subUL.children[0].offsetHeight)
               };
               subUL.style.overflowY = "hidden";
               addClass(LI, options.subpageULClass);
@@ -136,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
           mainUL[options.propertyParameter] = mainButton;
           mainButton[options.propertyParameter] = {
             target        : mainUL,
-            animationTime : animationTime * (mainULChildrenLength / 5)
+            animationTime : Math.round(animationTime * mainUL.children[0].offsetHeight)
           };
           mainUL.style.overflowY = "hidden";
           mainButton.innerHTML = mainButtonContent;
@@ -196,7 +194,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var element = button[options.propertyParameter].target;
     var targetHeight = element.scrollHeight;
     var startHeight = element.offsetHeight;
-    var addingPerFrame = Math.round((targetHeight - startHeight) / (1000 * button[options.propertyParameter].animationTime / 60));
+    var addingPerFrame = button[options.propertyParameter].animationTime;
+    //var addingPerFrame = Math.round((targetHeight - startHeight) / (1000 * button[options.propertyParameter].animationTime / 60));
     var heightChange = function () {
       startHeight += addingPerFrame;
       if (startHeight < targetHeight) {
@@ -216,7 +215,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var button = this;
     var element = button[options.propertyParameter].target;
     var startHeight = element.offsetHeight;
-    var removePerFrame = Math.round(startHeight / (1000 * button[options.propertyParameter].animationTime / 60));
+    var removePerFrame = button[options.propertyParameter].animationTime;
+    //var removePerFrame = Math.round(startHeight / (1000 * button[options.propertyParameter].animationTime / 60));
     var heightChange = function () {
       startHeight -= removePerFrame;
       if (startHeight >= 1) {
